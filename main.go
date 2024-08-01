@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 
-	manager "github.com/cuthbeorht/media-library-manager/internal"
+	"github.com/cuthbeorht/media-library-manager/internal/auth"
+	"github.com/cuthbeorht/media-library-manager/internal/dropbox"
 )
 
 func main() {
 	fmt.Println("Initializing Media Library Manager")
 
-	manager.WalkMediaDir("/Volumes/DropboxData/Music")
+	token := auth.Auth()
+
+	dropbox.WalkMediaDir(token.AccessToken)
 
 }

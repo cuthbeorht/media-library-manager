@@ -9,11 +9,17 @@ import (
 )
 
 func Auth() *oauth2.Token {
+
+	token, _ := ReadToken()
+	if token != nil {
+		return token
+	}
+
 	ctx := context.Background()
 	conf := &oauth2.Config{
 		ClientID:     "uh8fq8z3ah7tlex",
 		ClientSecret: "xj75sln1z8e23jn",
-		Scopes:       []string{"files.metadata.read", "account_info.read"},
+		Scopes:       []string{"files.metadata.read", "account_info.read", "sharing.read"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://www.dropbox.com/oauth2/authorize",
 			TokenURL: "https://api.dropboxapi.com/oauth2/token",
@@ -26,6 +32,7 @@ func Auth() *oauth2.Token {
 	fmt.Printf("Visit the URL for the auth dialog: %v", url)
 
 	var code string
+	fmt.Print("\nEnter the confirmation code: ")
 	if _, err := fmt.Scan(&code); err != nil {
 		log.Fatal(err)
 	}
@@ -33,6 +40,7 @@ func Auth() *oauth2.Token {
 	if err != nil {
 		log.Fatal(err)
 	}
+	WriteToken(tok)
 
 	return tok
 

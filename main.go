@@ -11,7 +11,8 @@ func main() {
 	fmt.Println("Initializing Media Library Manager")
 
 	token := auth.Auth()
+	client := dropbox.Client(token.AccessToken)
 
-	dropbox.WalkMediaDir(token.AccessToken)
+	dropbox.WalkMediaDir(client)
 
 }

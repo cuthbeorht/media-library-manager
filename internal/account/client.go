@@ -1,4 +1,4 @@
-package dropbox
+package account
 
 import (
 	"github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox"

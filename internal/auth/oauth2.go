@@ -11,7 +11,7 @@ import (
 func Auth() *oauth2.Token {
 
 	token, _ := ReadToken()
-	if token != nil {
+	if token != nil && token.Valid() {
 		return token
 	}
 

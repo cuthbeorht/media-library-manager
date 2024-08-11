@@ -30,7 +30,8 @@ func Connect(path string) *sql.DB {
 func CreateTables(connection *sql.DB) {
 	createAudioFileTable := `
 		create table if not exists audio_files (
-			id integer primary key autoincrement
+			id integer primary key autoincrement,
+			name varchar(255)
 		)
 	`
 

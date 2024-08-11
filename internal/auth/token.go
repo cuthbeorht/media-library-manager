@@ -25,7 +25,7 @@ func WriteToken(token *oauth2.Token) {
 func ReadToken() (*oauth2.Token, error) {
 	dat, err := os.ReadFile("token.json")
 	if err != nil {
-		log.Fatal(err)
+		return nil, errors.New("no token found")
 	}
 	if dat != nil {
 		var token oauth2.Token

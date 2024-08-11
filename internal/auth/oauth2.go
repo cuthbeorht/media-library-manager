@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/cuthbeorht/media-library-manager/internal/config"
 	"golang.org/x/oauth2"
 )
 
-func Auth() *oauth2.Token {
+func Auth(appConfig config.ApplicationConfig) *oauth2.Token {
 
 	token, _ := ReadToken()
 	if token != nil && token.Valid() {
@@ -17,12 +18,12 @@ func Auth() *oauth2.Token {
 
 	ctx := context.Background()
 	conf := &oauth2.Config{
-		ClientID:     "uh8fq8z3ah7tlex",
-		ClientSecret: "xj75sln1z8e23jn",
-		Scopes:       []string{"files.metadata.read", "account_info.read", "sharing.read"},
+		ClientID:     appConfig.ClientId,
+		ClientSecret: appConfig.ClientSecret,
+		Scopes:       appConfig.Scopes,
 		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://www.dropbox.com/oauth2/authorize",
-			TokenURL: "https://api.dropboxapi.com/oauth2/token",
+			AuthURL:  appConfig.AuthUrl,
+			TokenURL: appConfig.TokenUrl,
 		},
 	}
 

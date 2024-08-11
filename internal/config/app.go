@@ -11,6 +11,7 @@ type ApplicationConfig struct {
 	Scopes       []string
 	AuthUrl      string
 	TokenUrl     string
+	DatabasePath string
 }
 
 func NewApplicationConfig() ApplicationConfig {
@@ -20,5 +21,6 @@ func NewApplicationConfig() ApplicationConfig {
 		Scopes:       strings.Split(os.Getenv("SCOPES"), ","),
 		AuthUrl:      os.Getenv("AUTH_URL"),
 		TokenUrl:     os.Getenv("TOKEN_URL"),
+		DatabasePath: "./audio_files.db",
 	}
 }

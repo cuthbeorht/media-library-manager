@@ -30,6 +30,6 @@ func main() {
 	dropboxConfig := config.DropboxConfig(token.AccessToken)
 	filesClient := files.Client(dropboxConfig)
 
-	walker.WalkMediaDir(dbConn, filesClient, "/New_Music/music/Mass Effect 2 OST")
+	walker.WalkMediaDir(dbConn, filesClient, "/New_Music/music")
 
 }

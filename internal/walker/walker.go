@@ -20,7 +20,8 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 			switch f := entry.(type) {
 			case *dropbox.FolderMetadata:
 				// fmt.Println("Folder entry: ", f.Name, f.PathDisplay)
-				getFiles(client, f.PathDisplay)
+				newFiles := getFiles(client, f.PathDisplay)
+				myFiles = append(myFiles, newFiles...)
 
 			case *dropbox.FileMetadata:
 				// fmt.Println("File content: ", f.Name)
@@ -28,22 +29,36 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 			}
 
 		}
+
 		return myFiles
 	}
 
 	myFiles := getFiles(client, path)
 	preparedInsert, _ := dbConn.Prepare("insert into audio_files (name) values (?)")
+	preparedSelect, _ := dbConn.Prepare("select name from audio_files where name = ?")
 	for _, x := range myFiles {
-		res, err := preparedInsert.Exec(x)
-		if err != nil {
-			fmt.Println("could not insert: ", err)
+
+		res, _ := preparedSelect.Query(x)
+		res.Next()
+		var fileName string
+		res.Scan(&fileName)
+		res.Close()
+
+		if fileName == "" {
+
+			res, err := preparedInsert.Exec(x)
+			if err != nil {
+				fmt.Println("could not insert: ", err)
+			}
+			fmt.Println("File: ", x, "\nInsert result: ", res)
 		}
-		fmt.Println("File: ", x, "\nInsert result: ", res)
+
 	}
 
 }
 
 func getPathContent(client dropbox.Client, path string) *dropbox.ListFolderResult {
+	fmt.Println("Fetching new batch from: ", path)
 	myFiles, err := client.ListFolder(&dropbox.ListFolderArg{
 		Path: path,
 	})

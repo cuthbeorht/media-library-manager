@@ -2,6 +2,7 @@ package audiofiles
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -12,7 +13,7 @@ type AudioFile struct {
 }
 
 type AudioFileEntity struct {
-	Id   int
+	Id   int64
 	File AudioFile
 }
 
@@ -24,7 +25,7 @@ func NewAudioFile(name string, size int, path string) AudioFile {
 	}
 }
 
-func NewAudioFileEntity(name string, size int, path string, databaseId int) AudioFileEntity {
+func NewAudioFileEntity(name string, size int, path string, databaseId int64) AudioFileEntity {
 	return AudioFileEntity{
 		File: NewAudioFile(name, size, path),
 		Id:   databaseId,
@@ -44,5 +45,39 @@ func CreateTables(connection *sql.DB) {
 	_, err := connection.Exec(createAudioFileTable)
 	if err != nil {
 		log.Fatal("Could not create audio file table: ", err)
+	}
+}
+
+func FindAudioFileByName(connection *sql.DB, name string) AudioFileEntity {
+
+	preparedSelect, _ := connection.Prepare("select name from audio_files where name = ?")
+
+	res, _ := preparedSelect.Query(name)
+	res.Next()
+	var fileName AudioFileEntity
+	res.Scan(&fileName)
+	res.Close()
+
+	return fileName
+
+}
+
+func PersistAudioFile(connection *sql.DB, audioFile AudioFile) AudioFileEntity {
+	tx, _ := connection.Begin()
+
+	preparedInsert, _ := tx.Prepare("insert into audio_files (name, size, path) values (?, ?, ?)")
+	defer preparedInsert.Close()
+
+	res, err := preparedInsert.Exec(audioFile.Name, audioFile.Size, audioFile.Path)
+	if err != nil {
+		fmt.Println("could not insert: ", err)
+	}
+
+	var newAudioId int64
+	newAudioId, _ = res.LastInsertId()
+	tx.Commit()
+	return AudioFileEntity{
+		File: audioFile,
+		Id:   newAudioId,
 	}
 }

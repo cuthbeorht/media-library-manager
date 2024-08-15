@@ -34,22 +34,11 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 	}
 
 	myFiles := getFiles(client, path)
-	preparedInsert, _ := dbConn.Prepare("insert into audio_files (name) values (?)")
-	preparedSelect, _ := dbConn.Prepare("select name from audio_files where name = ?")
-	for _, x := range myFiles {
 
-		res, _ := preparedSelect.Query(x)
-		res.Next()
-		var fileName string
-		res.Scan(&fileName)
-		res.Close()
+	for _, x := range myFiles {
 
 		if fileName == "" {
 
-			res, err := preparedInsert.Exec(x)
-			if err != nil {
-				fmt.Println("could not insert: ", err)
-			}
 			fmt.Println("File: ", x, "\nInsert result: ", res)
 		}
 

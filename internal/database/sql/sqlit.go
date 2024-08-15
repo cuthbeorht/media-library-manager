@@ -26,17 +26,3 @@ func Connect(path string) *sql.DB {
 
 	return connection
 }
-
-func CreateTables(connection *sql.DB) {
-	createAudioFileTable := `
-		create table if not exists audio_files (
-			id integer primary key autoincrement,
-			name varchar(255)
-		)
-	`
-
-	_, err := connection.Exec(createAudioFileTable)
-	if err != nil {
-		log.Fatal("Could not create audio file table: ", err)
-	}
-}

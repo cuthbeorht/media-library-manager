@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	audiofiles "github.com/cuthbeorht/media-library-manager/internal/audio_files"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
 
@@ -22,7 +23,7 @@ func Connect(path string) *sql.DB {
 
 	}
 
-	CreateTables(connection)
+	audiofiles.CreateTables(connection)
 
 	return connection
 }

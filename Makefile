@@ -1,7 +1,11 @@
 format:
-	echo "Formatting files"
-	gofmt -l -w .
+	@echo "Check files for formatting"
+	@gofmt -l -w .
 
 check:
-	echo "Checking source code for suspicious activity"
-	go vet .
+	@echo "Checking source code for suspicious activity"
+	@go vet .
+
+build:
+	@echo "Building executable"
+	@go build -o mml ./main.go

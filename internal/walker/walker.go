@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	audiofiles "github.com/cuthbeorht/media-library-manager/internal/audio_files"
 	dropbox "github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox/files"
 )
 
@@ -24,24 +25,17 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 				myFiles = append(myFiles, newFiles...)
 
 			case *dropbox.FileMetadata:
-				// fmt.Println("File content: ", f.Name)
-				myFiles = append(myFiles, f.Name)
+				newFile := audiofiles.AudioFile{
+					Name: "foo",
+					Size: 100,
+					Path: "/path/foo",
+				}
+				audiofiles.PersistAudioFile(dbConn, newFile)
 			}
 
 		}
 
 		return myFiles
-	}
-
-	myFiles := getFiles(client, path)
-
-	for _, x := range myFiles {
-
-		if fileName == "" {
-
-			fmt.Println("File: ", x, "\nInsert result: ", res)
-		}
-
 	}
 
 }

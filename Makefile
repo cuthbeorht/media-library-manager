@@ -9,3 +9,11 @@ check:
 build:
 	@echo "Building executable"
 	@go build -o mml ./main.go
+
+run: build
+	@echo "Running application"
+	@./mml
+
+clean:
+	@echo "Removing all temporary files"
+	@rm mml audio_files.db token.json

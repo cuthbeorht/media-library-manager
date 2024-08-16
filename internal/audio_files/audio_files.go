@@ -8,7 +8,7 @@ import (
 
 type AudioFile struct {
 	Name string
-	Size int
+	Size uint64
 	Path string
 }
 
@@ -17,7 +17,7 @@ type AudioFileEntity struct {
 	File AudioFile
 }
 
-func NewAudioFile(name string, size int, path string) AudioFile {
+func NewAudioFile(name string, size uint64, path string) AudioFile {
 	return AudioFile{
 		Name: name,
 		Size: size,
@@ -25,7 +25,7 @@ func NewAudioFile(name string, size int, path string) AudioFile {
 	}
 }
 
-func NewAudioFileEntity(name string, size int, path string, databaseId int64) AudioFileEntity {
+func NewAudioFileEntity(name string, size uint64, path string, databaseId int64) AudioFileEntity {
 	return AudioFileEntity{
 		File: NewAudioFile(name, size, path),
 		Id:   databaseId,

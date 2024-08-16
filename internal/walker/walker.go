@@ -21,14 +21,13 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 			switch f := entry.(type) {
 			case *dropbox.FolderMetadata:
 				// fmt.Println("Folder entry: ", f.Name, f.PathDisplay)
-				newFiles := getFiles(client, f.PathDisplay)
-				myFiles = append(myFiles, newFiles...)
+				getFiles(client, f.PathDisplay)
 
 			case *dropbox.FileMetadata:
 				newFile := audiofiles.AudioFile{
-					Name: "foo",
-					Size: 100,
-					Path: "/path/foo",
+					Name: f.Metadata.Name,
+					Size: f.Size,
+					Path: f.Metadata.PathDisplay,
 				}
 				audiofiles.PersistAudioFile(dbConn, newFile)
 			}
@@ -37,6 +36,8 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 
 		return myFiles
 	}
+
+	getFiles(client, path)
 
 }
 

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	audiofiles "github.com/cuthbeorht/media-library-manager/internal/audio_files"
 	_ "github.com/mattn/go-sqlite3" // Import go-sqlite3 library
 )
 
@@ -22,21 +23,7 @@ func Connect(path string) *sql.DB {
 
 	}
 
-	CreateTables(connection)
+	audiofiles.CreateTables(connection)
 
 	return connection
-}
-
-func CreateTables(connection *sql.DB) {
-	createAudioFileTable := `
-		create table if not exists audio_files (
-			id integer primary key autoincrement,
-			name varchar(255)
-		)
-	`
-
-	_, err := connection.Exec(createAudioFileTable)
-	if err != nil {
-		log.Fatal("Could not create audio file table: ", err)
-	}
 }

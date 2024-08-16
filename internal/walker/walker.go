@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	audiofiles "github.com/cuthbeorht/media-library-manager/internal/audio_files"
 	dropbox "github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox/files"
 )
 
@@ -20,12 +21,15 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 			switch f := entry.(type) {
 			case *dropbox.FolderMetadata:
 				// fmt.Println("Folder entry: ", f.Name, f.PathDisplay)
-				newFiles := getFiles(client, f.PathDisplay)
-				myFiles = append(myFiles, newFiles...)
+				getFiles(client, f.PathDisplay)
 
 			case *dropbox.FileMetadata:
-				// fmt.Println("File content: ", f.Name)
-				myFiles = append(myFiles, f.Name)
+				newFile := audiofiles.AudioFile{
+					Name: f.Metadata.Name,
+					Size: f.Size,
+					Path: f.Metadata.PathDisplay,
+				}
+				audiofiles.PersistAudioFile(dbConn, newFile)
 			}
 
 		}
@@ -33,27 +37,7 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 		return myFiles
 	}
 
-	myFiles := getFiles(client, path)
-	preparedInsert, _ := dbConn.Prepare("insert into audio_files (name) values (?)")
-	preparedSelect, _ := dbConn.Prepare("select name from audio_files where name = ?")
-	for _, x := range myFiles {
-
-		res, _ := preparedSelect.Query(x)
-		res.Next()
-		var fileName string
-		res.Scan(&fileName)
-		res.Close()
-
-		if fileName == "" {
-
-			res, err := preparedInsert.Exec(x)
-			if err != nil {
-				fmt.Println("could not insert: ", err)
-			}
-			fmt.Println("File: ", x, "\nInsert result: ", res)
-		}
-
-	}
+	getFiles(client, path)
 
 }
 

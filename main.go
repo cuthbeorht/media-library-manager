@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	audiofiles "github.com/cuthbeorht/media-library-manager/internal/audio_files"
 	"github.com/cuthbeorht/media-library-manager/internal/config"
 	database "github.com/cuthbeorht/media-library-manager/internal/database/sql"
 	"github.com/cuthbeorht/media-library-manager/internal/dropbox/auth"
@@ -24,7 +25,7 @@ func main() {
 
 	dbConn := database.Connect(appConfig.DatabasePath)
 	defer dbConn.Close()
-	database.CreateTables(dbConn)
+	audiofiles.CreateTables(dbConn)
 
 	token := auth.Auth(appConfig)
 	dropboxConfig := config.DropboxConfig(token.AccessToken)

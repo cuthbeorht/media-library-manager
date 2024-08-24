@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/cuthbeorht/go-media-analyzer/src/media"
 
@@ -26,7 +27,7 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 				getFiles(client, f.PathDisplay)
 
 			case *dropbox.FileMetadata:
-				newMedia, _ := media.OpenMedia("")
+				newMedia, _ := media.OpenMedia(strings.Join([]string{"/Volumes/DropboxData", f.PathDisplay}, "/"))
 				newFile := audiofiles.AudioFile{
 					Name: newMedia.Name,
 					Size: f.Size,

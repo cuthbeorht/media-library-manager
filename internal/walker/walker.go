@@ -12,6 +12,11 @@ import (
 	dropbox "github.com/dropbox/dropbox-sdk-go-unofficial/v6/dropbox/files"
 )
 
+var validFileTypes = map[string]bool{
+	"MP3":  true,
+	"FLAC": true,
+}
+
 func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 
 	var getFiles func(client dropbox.Client, path string) []string
@@ -23,17 +28,19 @@ func WalkMediaDir(dbConn *sql.DB, client dropbox.Client, path string) {
 		for _, entry := range content.Entries {
 			switch f := entry.(type) {
 			case *dropbox.FolderMetadata:
-				// fmt.Println("Folder entry: ", f.Name, f.PathDisplay)
+
 				getFiles(client, f.PathDisplay)
 
 			case *dropbox.FileMetadata:
 				newMedia, _ := media.OpenMedia(strings.Join([]string{"/Volumes/DropboxData", f.PathDisplay}, "/"))
-				newFile := audiofiles.AudioFile{
-					Name: newMedia.Name,
-					Size: f.Size,
-					Path: f.Metadata.PathDisplay,
+				if validFileTypes[strings.ToUpper(newMedia.FileType)] {
+					newFile := audiofiles.AudioFile{
+						Name: newMedia.Name,
+						Size: f.Size,
+						Path: f.Metadata.PathDisplay,
+					}
+					audiofiles.PersistAudioFile(dbConn, newFile)
 				}
-				audiofiles.PersistAudioFile(dbConn, newFile)
 			}
 
 		}

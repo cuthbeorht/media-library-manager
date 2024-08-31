@@ -4,13 +4,13 @@ format:
 
 check:
 	@echo "Checking source code for suspicious activity"
-	@go vet .
+	@go vet ./...
 
-build:
+build-cli:
 	@echo "Building executable"
-	@go build -o mml ./main.go
+	@go build -o mml ./cmd/cli/main.go
 
-run: build
+run-cli: build-cli
 	@echo "Running application"
 	@./mml
 

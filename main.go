@@ -9,7 +9,7 @@ import (
 	database "github.com/cuthbeorht/media-library-manager/internal/database/sql"
 	"github.com/cuthbeorht/media-library-manager/internal/dropbox/auth"
 	"github.com/cuthbeorht/media-library-manager/internal/dropbox/files"
-	"github.com/cuthbeorht/media-library-manager/internal/walker"
+	walker "github.com/cuthbeorht/media-library-manager/pkg/library"
 	"github.com/joho/godotenv"
 )
 

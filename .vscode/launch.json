@@ -10,6 +10,12 @@
             "request": "launch",
             "mode": "auto",
             "program": "main.go",
+            "args": [
+                "--mode",
+                "TTY",
+                "--root-path",
+                "."
+            ],
             "envFile": "${workspaceFolder}/.env"
         }
     ]

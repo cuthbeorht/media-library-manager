@@ -8,7 +8,7 @@ check:
 
 build-cli:
 	@echo "Building executable"
-	@go build -o mml ./cmd/cli/main.go
+	@go build -o mml ./main.go
 
 run-cli: build-cli
 	@echo "Running application"

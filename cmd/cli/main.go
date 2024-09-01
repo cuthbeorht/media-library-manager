@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
+func Cli() {
 	fmt.Println("Initializing Media Library Manager")
 
 	err := godotenv.Load(".env")
